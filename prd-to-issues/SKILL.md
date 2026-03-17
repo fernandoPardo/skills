@@ -1,19 +1,25 @@
 ---
 name: prd-to-issues
-description: Break a PRD into independently-grabbable GitHub issues using tracer-bullet vertical slices. Use when user wants to convert a PRD to issues, create implementation tickets, or break down a PRD into work items.
+description: Break a PRD into a Jira Epic with independently-grabbable Stories using tracer-bullet vertical slices. Use when user wants to convert a PRD to issues, create implementation tickets, or break down a PRD into work items.
 ---
 
 # PRD to Issues
 
-Break a PRD into independently-grabbable GitHub issues using vertical slices (tracer bullets).
+Break a PRD into a Jira Epic with independently-grabbable Stories using vertical slices (tracer bullets).
 
 ## Process
 
 ### 1. Locate the PRD
 
-Ask the user for the PRD GitHub issue number (or URL).
+Ask the user for the Confluence page URL or title containing the PRD.
 
-If the PRD is not already in your context window, fetch it with `gh issue view <number>` (with comments).
+If the PRD is not already in your context window, fetch it with:
+
+```bash
+acli confluence page get --space <SPACE_KEY> --title "<PRD Title>"
+```
+
+Ask the user for the Confluence space key if not already known.
 
 ### 2. Explore the codebase (optional)
 
@@ -49,16 +55,26 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Create the GitHub issues
+### 5. Create the Jira Epic and Stories
 
-For each approved slice, create a GitHub issue using `gh issue create`. Use the issue body template below.
+First, create a Jira Epic for the PRD:
 
-Create issues in dependency order (blockers first) so you can reference real issue numbers in the "Blocked by" field.
+```bash
+acli jira workitem create --project ENG --type Epic --summary "<PRD Title>" --description "Epic for PRD: <PRD Title>. See Confluence page: <page URL>"
+```
+
+Then, for each approved slice, create a Jira Story as a child of the Epic. Write each story body to a temporary file and create it:
+
+```bash
+acli jira workitem create --project ENG --type Story --parent <EPIC-KEY> --summary "<Slice title>" --description-file /tmp/story-body.md
+```
+
+Create stories in dependency order (blockers first) so you can reference real issue keys in the "Blocked by" field.
 
 <issue-template>
 ## Parent PRD
 
-#<prd-issue-number>
+Epic: <EPIC-KEY> | Confluence: <page URL>
 
 ## What to build
 
@@ -72,7 +88,7 @@ A concise description of this vertical slice. Describe the end-to-end behavior, 
 
 ## Blocked by
 
-- Blocked by #<issue-number> (if any)
+- Blocked by <ISSUE-KEY> (if any)
 
 Or "None - can start immediately" if no blockers.
 
@@ -85,4 +101,4 @@ Reference by number from the parent PRD:
 
 </issue-template>
 
-Do NOT close or modify the parent PRD issue.
+Do NOT modify the parent Epic or the Confluence PRD page.

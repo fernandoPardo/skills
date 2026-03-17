@@ -1,6 +1,6 @@
 ---
 name: write-a-prd
-description: Create a PRD through user interview, codebase exploration, and module design, then submit as a GitHub issue. Use when user wants to write a PRD, create a product requirements document, or plan a new feature.
+description: Create a PRD through user interview, codebase exploration, and module design, then publish as a Confluence page. Use when user wants to write a PRD, create a product requirements document, or plan a new feature.
 ---
 
 This skill will be invoked when the user wants to create a PRD. You may skip steps if you don't consider them necessary.
@@ -17,7 +17,15 @@ A deep module (as opposed to a shallow module) is one which encapsulates a lot o
 
 Check with the user that these modules match their expectations. Check with the user which modules they want tests written for.
 
-5. Once you have a complete understanding of the problem and solution, use the template below to write the PRD. The PRD should be submitted as a GitHub issue.
+5. Ask the user which Confluence space the PRD should be created in (e.g., space key like `ENG`, `PRODUCT`).
+
+6. Once you have a complete understanding of the problem and solution, use the template below to write the PRD. Write the filled template to a temporary file, then publish it as a Confluence page using:
+
+```bash
+acli confluence page create --space <SPACE_KEY> --title "<PRD Title>" --body-file /tmp/prd-body.md
+```
+
+Share the Confluence page URL with the user after creation.
 
 <prd-template>
 

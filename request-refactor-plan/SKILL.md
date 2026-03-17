@@ -1,6 +1,6 @@
 ---
 name: request-refactor-plan
-description: Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue. Use when user wants to plan a refactor, create a refactoring RFC, or break a refactor into safe incremental steps.
+description: Create a detailed refactor plan with tiny commits via user interview, then file it as a Jira Task. Use when user wants to plan a refactor, create a refactoring RFC, or break a refactor into safe incremental steps.
 ---
 
 This skill will be invoked when the user wants to create a refactor request. You should go through the steps below. You may skip steps if you don't consider them necessary.
@@ -19,7 +19,13 @@ This skill will be invoked when the user wants to create a refactor request. You
 
 7. Break the implementation into a plan of tiny commits. Remember Martin Fowler's advice to "make each refactoring step as small as possible, so that you can always see the program working."
 
-8. Create a GitHub issue with the refactor plan. Use the following template for the issue description:
+8. Create a Jira Task with the refactor plan. Write the filled template to a temporary file, then create the workitem:
+
+```bash
+acli jira workitem create --project ENG --type Task --summary "<Refactor title>" --description-file /tmp/refactor-plan.md
+```
+
+Share the Jira issue key with the user after creation. Use the following template for the description:
 
 <refactor-plan-template>
 
